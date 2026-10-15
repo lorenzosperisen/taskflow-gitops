@@ -1,0 +1,28 @@
+Name:            taskflow
+Namespace:       taskflow
+Status:          [31m✖[0m Degraded
+Message:         RolloutAborted: Rollout aborted update to revision 2: Step-based analysis phase error/failed: Metric "test-de-charge-k6" assessed Failed due to failed (1) > failureLimit (0)
+Strategy:        Canary
+  Step:          0/7
+  SetWeight:     0
+  ActualWeight:  0
+Images:          ghcr.io/9m7fjfpv9k-cyber/taskflow:2.0.0 ([32mstable[0m)
+Replicas:
+  Desired:       4
+  Current:       4
+  Updated:       0
+  Ready:         4
+  Available:     4
+
+NAME                                                                 KIND         STATUS        AGE    INFO
+⟳ taskflow                                                           Rollout      [31m✖[0m Degraded    76m    
+├──# revision:2                                                                                        
+│  ├──⧉ [33mtaskflow-df976ccb5[0m                                           ReplicaSet   [0m•[0m ScaledDown  10m    [33mcanary[0m
+│  └──α [0mtaskflow-df976ccb5-2-2[0m                                       AnalysisRun  [31m✖[0m Failed      10m    [31m✖[0m 1
+│     └──⊞ [0md1c96ec8-27bd-4f30-b14e-9e1bf596bb72.test-de-charge-k6.1[0m  Job          [31m✖[0m Failed      10m    
+└──# revision:1                                                                                        
+   └──⧉ [32mtaskflow-c6cf57bd6[0m                                           ReplicaSet   [32m✔[0m Healthy     76m    [32mstable[0m
+      ├──□ taskflow-c6cf57bd6-8fxdf                                  Pod          [32m✔[0m Running     76m    ready:1/1
+      ├──□ taskflow-c6cf57bd6-cgsdl                                  Pod          [32m✔[0m Running     76m    ready:1/1
+      ├──□ taskflow-c6cf57bd6-w544b                                  Pod          [32m✔[0m Running     76m    ready:1/1
+      └──□ taskflow-c6cf57bd6-6pxdn                                  Pod          [32m✔[0m Running     9m38s  ready:1/1
