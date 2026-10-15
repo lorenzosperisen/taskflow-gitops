@@ -131,7 +131,7 @@ kubectl -n taskflow get replicasets -l app=taskflow -o custom-columns='NAME:.met
 ```
 
 **Interprétation :** environ 2 minutes et 42 secondes se sont écoulées entre l'heure de fusion affichée par GitHub et la création du ReplicaSet de la nouvelle version.
-![ReplicaSets TaskFlow 1.0.0 et 2.0.0](images/replicas.png)
+![ReplicaSets TaskFlow 1.0.0 et 2.0.0](images/replica.png)
 
 ### 5. Test de dérive : nombre de réplicas
 
