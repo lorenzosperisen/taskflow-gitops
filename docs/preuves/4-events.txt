@@ -1,0 +1,41 @@
+LAST SEEN   TYPE      REASON                 OBJECT                                                               MESSAGE
+30m         Normal    Scheduled              pod/taskflow-df976ccb5-smdzl                                         Successfully assigned taskflow/taskflow-df976ccb5-smdzl to cicd-control-plane
+30m         Normal    Scheduled              pod/d1c96ec8-27bd-4f30-b14e-9e1bf596bb72.test-de-charge-k6.1-lpxmb   Successfully assigned taskflow/d1c96ec8-27bd-4f30-b14e-9e1bf596bb72.test-de-charge-k6.1-lpxmb to cicd-control-plane
+29m         Normal    Scheduled              pod/taskflow-c6cf57bd6-6pxdn                                         Successfully assigned taskflow/taskflow-c6cf57bd6-6pxdn to cicd-control-plane
+30m         Normal    ScalingReplicaSet      rollout/taskflow                                                     Scaled down ReplicaSet taskflow-c6cf57bd6 (revision 1) from 4 to 3
+30m         Normal    RolloutNotCompleted    rollout/taskflow                                                     Rollout not completed, started update to revision 2 (df976ccb5)
+30m         Normal    NewReplicaSetCreated   rollout/taskflow                                                     Created ReplicaSet taskflow-df976ccb5 (revision 2)
+30m         Normal    ScalingReplicaSet      rollout/taskflow                                                     Scaled up ReplicaSet taskflow-df976ccb5 (revision 2) from 0 to 1
+30m         Normal    RolloutUpdated         rollout/taskflow                                                     Rollout updated to revision 2
+30m         Normal    SuccessfulCreate       replicaset/taskflow-df976ccb5                                        Created pod: taskflow-df976ccb5-smdzl
+30m         Normal    Killing                pod/taskflow-c6cf57bd6-prdmp                                         Stopping container taskflow
+30m         Normal    SuccessfulDelete       replicaset/taskflow-c6cf57bd6                                        Deleted pod: taskflow-c6cf57bd6-prdmp
+30m         Normal    Started                pod/taskflow-df976ccb5-smdzl                                         Container started
+30m         Normal    Created                pod/taskflow-df976ccb5-smdzl                                         Container created
+30m         Normal    Pulled                 pod/taskflow-df976ccb5-smdzl                                         Container image "ghcr.io/9m7fjfpv9k-cyber/taskflow:2.1.0" already present on machine and can be accessed by the pod
+30m         Warning   Unhealthy              pod/taskflow-df976ccb5-smdzl                                         Readiness probe failed: Get "http://10.244.0.19:8000/health": dial tcp 10.244.0.19:8000: connect: connection refused
+30m         Normal    RolloutStepCompleted   rollout/taskflow                                                     Rollout step 1/7 completed (setWeight: 25)
+30m         Normal    RolloutPaused          rollout/taskflow                                                     Rollout is paused (CanaryPauseStep)
+30m         Normal    SwitchService          rollout/taskflow                                                     Switched selector for service 'taskflow-canary' from 'c6cf57bd6' to 'df976ccb5'
+30m         Normal    SuccessfulCreate       job/d1c96ec8-27bd-4f30-b14e-9e1bf596bb72.test-de-charge-k6.1         Created pod: d1c96ec8-27bd-4f30-b14e-9e1bf596bb72.test-de-charge-k6.1-lpxmb
+30m         Normal    AnalysisRunRunning     rollout/taskflow                                                     Step Analysis Run 'taskflow-df976ccb5-2-2' Status New: 'Running' Previous: ''
+30m         Normal    RolloutResumed         rollout/taskflow                                                     Rollout is resumed
+30m         Normal    RolloutStepCompleted   rollout/taskflow                                                     Rollout step 2/7 completed (pause: 20s)
+29m         Normal    Created                pod/d1c96ec8-27bd-4f30-b14e-9e1bf596bb72.test-de-charge-k6.1-lpxmb   Container created
+29m         Normal    Started                pod/d1c96ec8-27bd-4f30-b14e-9e1bf596bb72.test-de-charge-k6.1-lpxmb   Container started
+29m         Normal    Pulled                 pod/d1c96ec8-27bd-4f30-b14e-9e1bf596bb72.test-de-charge-k6.1-lpxmb   Container image "grafana/k6:latest" already present on machine and can be accessed by the pod
+29m         Warning   BackoffLimitExceeded   job/d1c96ec8-27bd-4f30-b14e-9e1bf596bb72.test-de-charge-k6.1         Job has reached the specified backoff limit
+29m         Warning   AnalysisRunFailed      rollout/taskflow                                                     Step Analysis Run 'taskflow-df976ccb5-2-2' Status New: 'Failed' Previous: 'Running'
+29m         Warning   RolloutAborted         rollout/taskflow                                                     Rollout aborted update to revision 2: Step-based analysis phase error/failed: Metric "test-de-charge-k6" assessed Failed due to failed (1) > failureLimit (0)
+29m         Warning   AnalysisRunFailed      analysisrun/taskflow-df976ccb5-2-2                                   Analysis Completed. Result: Failed
+29m         Normal    Killing                pod/taskflow-df976ccb5-smdzl                                         Stopping container taskflow
+29m         Normal    ScalingReplicaSet      rollout/taskflow                                                     Scaled down ReplicaSet taskflow-df976ccb5 (revision 2) from 1 to 0
+29m         Normal    ScalingReplicaSet      rollout/taskflow                                                     Scaled up ReplicaSet taskflow-c6cf57bd6 (revision 1) from 3 to 4
+29m         Normal    SwitchService          rollout/taskflow                                                     Switched selector for service 'taskflow-canary' from 'df976ccb5' to 'c6cf57bd6'
+29m         Normal    SuccessfulCreate       replicaset/taskflow-c6cf57bd6                                        Created pod: taskflow-c6cf57bd6-6pxdn
+29m         Warning   MetricFailed           analysisrun/taskflow-df976ccb5-2-2                                   Metric 'test-de-charge-k6' Completed. Result: Failed
+29m         Normal    SuccessfulDelete       replicaset/taskflow-df976ccb5                                        Deleted pod: taskflow-df976ccb5-smdzl
+29m         Normal    Created                pod/taskflow-c6cf57bd6-6pxdn                                         Container created
+29m         Warning   Unhealthy              pod/taskflow-c6cf57bd6-6pxdn                                         Readiness probe failed: Get "http://10.244.0.21:8000/health": dial tcp 10.244.0.21:8000: connect: connection refused
+29m         Normal    Started                pod/taskflow-c6cf57bd6-6pxdn                                         Container started
+29m         Normal    Pulled                 pod/taskflow-c6cf57bd6-6pxdn                                         Container image "ghcr.io/9m7fjfpv9k-cyber/taskflow:2.0.0" already present on machine and can be accessed by the pod
