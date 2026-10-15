@@ -252,3 +252,58 @@ Ce lab nous a permis de comprendre le fonctionnement d'un déploiement GitOps av
 Nous avons réussi à déployer TaskFlow `2.0.0` à partir d'une PR, à observer la correction automatique de deux dérives Kubernetes puis à revenir à la version `1.0.0` grâce à une nouvelle PR de Revert.
 
 L'expérience montre que Git constitue la source de vérité de l'infrastructure déclarative tandis qu'Argo CD assure la réconciliation entre l'état souhaité et l'état réel du cluster
+
+
+## Mini-PSSI : quality gates (Lab C)
+
+Une règle de sécurité n'existe que si un pipeline la vérifie. Les 5 règles de `policies/pssi.md` sont vérifiées automatiquement sur chaque PR par `.github/workflows/pssi.yml`.
+Les deux checks sont **obligatoires** dans le ruleset de `main` : une PR non conforme ne peut pas être mergée, même approuvée.
+
+| Règle | Exigence | Contrôle | Outil | Preuve |
+| --- | --- | --- | --- | --- |
+| R1 | Tag explicite, jamais `latest` | `deny` si l'image finit par `:latest` ou n'a pas de tag | conftest (Rego) | PR #16 bloquée : `nginx:latest` |
+| R2 | Images du registre `ghcr.io/9m7fjfpv9k-cyber/` uniquement | `deny` si l'image ne commence pas par ce registre | conftest (Rego) | PR #16 bloquée : `nginx` |
+| R3 | Limite mémoire sur chaque conteneur | `deny` si `resources.limits.memory` est absent | conftest (Rego), écrite par l'équipe | Rollout conforme (`256Mi`) |
+| R4 | Pods jamais en root | `deny` si `securityContext.runAsNonRoot` n'est pas `true` | conftest (Rego), écrite par l'équipe | FAIL R4 puis correction du Rollout (PR #14) |
+| R5 | Aucune faille HIGH/CRITICAL corrigeable dans les images | scan des images déployées dans `apps/` | Trivy 0.75.0 | Exception datée dans `.trivyignore` (PR #14) |
+
+### R4 : le cercle complet (règle → rouge → correction → vert)
+
+Après l'ajout de R3 et R4, conftest refuse notre Rollout, qui ne déclarait pas `runAsNonRoot` :
+
+![conftest : R4 en échec](images/pssi-r4-fail.png)
+
+Correction dans `apps/taskflow/rollout.yaml` (`securityContext.runAsNonRoot: true`). C'est sans risque, car l'image tourne déjà avec l'utilisateur non-root `10001`. Résultat : 30 tests, 30 passed.
+
+![conftest : 30 passed](images/pssi-r4-ok.png)
+
+### R5 : exception datée pour l'image du formateur
+
+Trivy a trouvé 9 CVE HIGH (aucune CRITICAL) dans l'image `taskflow:2.2.0` : 3 dans `starlette` 0.41.3 et 6 dans `urllib3` 1.26.20. L'image est fournie par le formateur, nous ne pouvons pas la reconstruire. La PSSI autorise alors une exception **écrite, justifiée, datée et validée en PR** : voir `.trivyignore`.
+
+- Chaque CVE porte `exp:2026-11-15` : après cette date, Trivy redevient rouge automatiquement et l'exception doit être revue.
+- Risque accepté : surtout des dénis de service et des fuites via redirections HTTP, limités car l'API tourne dans un cluster kind local non exposé.
+
+![PR #14 : approuvée, 2 checks verts](images/pssi-pr14-ok.png)
+
+### Les checks sont obligatoires
+
+![Ruleset main : checks PSSI obligatoires](images/pssi-checks-obligatoires.png)
+
+### Preuve du blocage : PR #16 non conforme
+
+PR de test avec `image: nginx:latest`. Même approuvée, elle ne peut pas être mergée : « PSSI manifests (conftest) » échoue sur R1 et R2.
+
+![PR #16 bloquée](images/pssi-pr16-bloquee.png)
+
+![Détail conftest : PSSI-R1 et PSSI-R2](images/pssi-pr16-conftest.png)
+
+La PR a été fermée sans merge.
+
+### Pourquoi c'est utile
+
+- **Retour rapide :** l'erreur est vue dans la PR, avant le déploiement.
+- **En entreprise,** on ajouterait Kyverno ou Gatekeeper dans le cluster, pour bloquer aussi ce qui contourne le pipeline (un `kubectl apply` manuel).
+- **Une exception sans date** devient une faille permanente oubliée. Avec `exp:`, elle est revue de force.
+
+**Exceptions en cours :** 9 CVE dans `.trivyignore`, expiration le 15/11/2026.
