@@ -1,0 +1,21 @@
+# Exception PSSI-R5 : image ghcr.io/9m7fjfpv9k-cyber/taskflow:2.2.0
+# 9 CVE HIGH, aucune CRITICAL, dans 2 bibliothèques Python de l'image :
+#   starlette 0.41.3 (corrigé en 0.49.1+) et urllib3 1.26.20 (corrigé en 2.6.0+)
+# Justification : image fournie par le formateur, l'équipe ne peut pas la reconstruire pendant le module.
+# Risque : surtout des dénis de service (DoS) et des fuites via redirections HTTP,
+#   limités ici car l'API tourne dans un cluster kind local, non exposé à Internet.
+# Validée en PR feat/pssi le 15/10/2026 (équipe Hafsa, Lorenzo, Lina).
+# Expire le 15/11/2026 : après cette date, Trivy redevient rouge et l'exception doit être revue.
+
+# starlette 0.41.3
+CVE-2025-62727 exp:2026-11-15
+CVE-2026-48818 exp:2026-11-15
+CVE-2026-54283 exp:2026-11-15
+
+# urllib3 1.26.20
+CVE-2025-66418 exp:2026-11-15
+CVE-2025-66471 exp:2026-11-15
+CVE-2026-21441 exp:2026-11-15
+CVE-2026-44431 exp:2026-11-15
+CVE-2026-97687 exp:2026-11-15
+CVE-2026-97689 exp:2026-11-15
